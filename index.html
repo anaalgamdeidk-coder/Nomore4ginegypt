@@ -30,6 +30,14 @@
 </head>
 <body>
   <div class="container">
+
+    <!-- هاشتاج في أول الصفحة مع زر نسخ -->
+    <div class="card" style="text-align:center;margin-bottom:12px;">
+      <p style="font-size:1.4rem;color:var(--accent);margin:0;" id="mainTag">#انترنيت_غير_محدود_في_مصر</p>
+      <button class="btn" style="margin-top:6px" onclick="copyText('mainTag')">انسخ الهاشتاج</button>
+    </div>
+    <!-- /هاشتاج -->
+
     <header>
       <div>
         <div class="tag">عايزين 5G • تحرك سِلمي</div>
@@ -134,9 +142,12 @@
 <script>
 function copyText(id){
   const t = document.getElementById(id);
-  t.select();
-  t.setSelectionRange(0,99999);
+  const range = document.createRange();
+  range.selectNode(t);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
   document.execCommand('copy');
+  window.getSelection().removeAllRanges();
   alert('اتنسخ — عدل البيانات قبل الإرسال');
 }
 function openMail(){
@@ -197,3 +208,4 @@ renderSigs();
 </script>
 </body>
 </html>
+
