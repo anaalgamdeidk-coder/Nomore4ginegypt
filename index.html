@@ -121,13 +121,12 @@
 
         <div class="card" style="margin-top:12px">
           <h3>عريضة محلية</h3>
-          <p class="small">اجمع توقيعات هنا (محلي على جهازك). ممكن تحمل CSV وتشارك.</p>
+          <p class="small">اجمع توقيعات هنا (محلي على جهازك).</p>
           <input id="sigName" placeholder="الاسم الكامل" />
           <input id="sigPhone" placeholder="تليفون (اختياري)" style="margin-top:8px"/>
           <input id="sigArea" placeholder="المنطقة/المدينة" style="margin-top:8px"/>
           <div style="margin-top:8px;display:flex;gap:8px;justify-content:center">
             <button class="btn" onclick="addSignature()">إضافة توقيع</button>
-            <button class="btn" onclick="downloadCSV()">تحميل CSV</button>
           </div>
           <div class="petition-list" id="petitionList"></div>
         </div>
@@ -156,12 +155,12 @@ function openMail(){
   window.location.href = 'mailto:complaints@tra.gov.eg?subject='+subject+'&body='+body;
 }
 function openWhatsApp(){
-  const waNumber = '201202155155'; // مثال، عدله حسب الرقم الرسمي
+  const waNumber = '201202155155'; 
   const text = encodeURIComponent(document.getElementById('waTemplate').value);
   window.open('https://wa.me/'+waNumber+'?text='+text, '_blank');
 }
 
-// توقيعات
+// توقيعات (محلية)
 const PET_KEY = 'eg_internet_petition_v1';
 function loadSigs(){
   try{return JSON.parse(localStorage.getItem(PET_KEY)||'[]')}catch(e){return []}
@@ -193,20 +192,9 @@ function addSignature(){
   document.getElementById('sigArea').value='';
   renderSigs();
 }
-function downloadCSV(){
-  const list=loadSigs();
-  if(list.length===0){alert('مافيش توقيعات للتحميل');return;}
-  const rows=[['الاسم','تليفون','المنطقة','التاريخ'],...list.map(r=>[r.name||'',r.phone||'',r.area||'',r.ts||''])];
-  const csv=rows.map(r=>r.map(cell=>'"'+String(cell).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='توقيعات_الإنترنت.csv';document.body.appendChild(a);a.click();a.remove();
-  URL.revokeObjectURL(url);
-}
 renderSigs();
 </script>
-  <!-- قسم إضافي في آخر الصفحة -->
+
 <section class="card">
   <h2>إزاي نطوّر الإنترنت في مصر</h2>
   <ol>
@@ -219,3 +207,4 @@ renderSigs();
 
 </body>
 </html>
+
