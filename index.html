@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-  
+
   <style>
     /*
     ============================================
@@ -226,43 +226,22 @@
 
       </div>
     </section>
+<!-- PETITION (GOOGLE FORM LINK) -->
+<section class="section" id="petitionSection">
+  <div class="card" style="text-align:center;">
+    <div class="card-header">
+      <div class="card-icon" aria-hidden="true">📝</div>
+      <h2 id="petitionTitle" class="card-title">شارك في العريضة</h2>
+    </div>
 
-    <!-- PETITION (LOCAL ONLY) -->
-    <section class="section" id="petitionSection">
-      <div class="card petition-form" aria-labelledby="petitionTitle">
-        <div class="card-header">
-          <div class="card-icon" aria-hidden="true">📝</div>
-          <h2 id="petitionTitle" class="card-title">عريضة محلية (محلي على جهازك)</h2>
-        </div>
+    <p class="small">ساعدنا نطالب بتحسين الإنترنت في مصر — اضغط الزر واملأ النموذج على Google Forms.</p>
 
-        <div class="petition-count" aria-hidden="false">
-          <span class="petition-number" id="petitionNumber">0</span>
-          <span class="petition-label">توقيع محلي محفوظ على جهازك</span>
-        </div>
-
-        <div class="form-group">
-          <label for="sigName">الاسم الكامل</label>
-          <input id="sigName" type="text" placeholder="الاسم الكامل" />
-        </div>
-        <div class="form-group">
-          <label for="sigPhone">التليفون (اختياري)</label>
-          <input id="sigPhone" type="tel" placeholder="010xxxxxxx" />
-        </div>
-        <div class="form-group">
-          <label for="sigArea">المنطقة / المدينة</label>
-          <input id="sigArea" type="text" placeholder="المنطقة" />
-        </div>
-
-        <div class="btn-group">
-          <button class="btn btn-primary" onclick="addSignature()">إضافة توقيع</button>
-          <button class="btn btn-outline" onclick="clearSignatures()">مسح التوقيعات (محلي)</button>
-        </div>
-
-        <div class="signatures-list" id="signaturesList" aria-live="polite" aria-atomic="true">
-          <div class="small" id="noSign">مافيش توقيعات لسه.</div>
-        </div>
-      </div>
-    </section>
+    <button class="btn btn-primary"
+      onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSduKpzkDvEEEdcyaoKPkboCq8UUKt_W3gOdXSzj8TuPe3OtIQ/viewform?usp=header', '_blank')">
+      الانتقال إلى العريضة على Google Forms
+    </button>
+  </div>
+</section>
 
     <!-- ==== NEW: CALL NTRA SECTION (CTA) ==== -->
     <section class="section" id="call-ntra">
@@ -340,7 +319,51 @@
       window.print();
     }
 
-
+    // =========================
+    // Petition (localStorage)
+    // =========================
+    const PET_KEY = 'eg_no_more_4g_petition_v1';
+    function loadSignatures(){ try{ return JSON.parse(localStorage.getItem(PET_KEY) || '[]'); } catch(e){ return []; } }
+    function saveSignatures(list){ localStorage.setItem(PET_KEY, JSON.stringify(list)); }
+    function renderSignatures(){
+      const list = loadSignatures();
+      const container = document.getElementById('signaturesList');
+      const number = document.getElementById('petitionNumber');
+      container.innerHTML = '';
+      number.textContent = list.length;
+      if(list.length === 0){
+        container.innerHTML = '<div id="noSign" class="small">مافيش توقيعات لسه.</div>';
+        return;
+      }
+      list.slice().reverse().forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'signature-item';
+        item.innerHTML = `<div class="signature-name">${escapeHtml(s.name)}</div><div class="signature-date">${escapeHtml(s.area || '')} • ${escapeHtml(s.phone || '')}</div>`;
+        container.appendChild(item);
+      });
+    }
+    function addSignature(){
+      const name = document.getElementById('sigName').value.trim();
+      const phone = document.getElementById('sigPhone').value.trim();
+      const area = document.getElementById('sigArea').value.trim();
+      if(!name){ alert('اكتب الاسم الأول!'); return; }
+      const list = loadSignatures();
+      list.push({ name, phone, area, ts: new Date().toISOString() });
+      saveSignatures(list);
+      document.getElementById('sigName').value = '';
+      document.getElementById('sigPhone').value = '';
+      document.getElementById('sigArea').value = '';
+      renderSignatures();
+      showToast('تم إضافة توقيع محليًا');
+    }
+    function clearSignatures(){
+      if(!confirm('هل أنت متأكد أنك عايز تمسح كل التوقيعات من جهازك؟ العملية محلية ولن تُستعاد.')) return;
+      localStorage.removeItem(PET_KEY);
+      renderSignatures();
+      showToast('تم مسح التوقيعات المحلية');
+    }
+    function escapeHtml(str = ''){ return String(str).replace(/[&<>"']/g, (m)=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]) ); }
+    renderSignatures();
 
     // =========================
     // CALL NTRA - main addition
