@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -11,13 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /*
-    ============================================
-    README - DEPLOYMENT INSTRUCTIONS
-    ============================================
-    (Same as provided — kept for clarity)
-    ============================================
-    */
+    /* ----------------------------------------------------------------
+    // CSS Variables and Base Styles
+    // ---------------------------------------------------------------- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root{
       --primary:#667eea; --primary-dark:#5a67d8; --secondary:#48bb78; --accent:#ed8936;
@@ -29,819 +24,526 @@
       --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-xl:20px;
       --spacing-xs:8px; --spacing-sm:12px; --spacing-md:16px; --spacing-lg:24px; --spacing-xl:32px; --spacing-2xl:48px;
     }
+
+    body.dark-mode {
+      --text-primary:#f7fafc;
+      --text-secondary:#cbd5e0;
+      --text-muted:#a0aec0;
+      --bg-light:#1a202c;
+      --bg-white:#2d3748;
+      --border-color:#4a5568;
+      --bg-gradient-start:#1a202c;
+      --bg-gradient-end:#2d3748;
+    }
+
     html{ scroll-behavior:smooth; font-size:16px; }
     body{
       font-family:"Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: linear-gradient(135deg,var(--bg-gradient-start) 0%,var(--bg-gradient-end) 100%);
       color:var(--text-primary); line-height:1.6; min-height:100vh; overflow-x:hidden; position:relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
+
+    /* Background Shapes */
     body::before, body::after{ content:''; position:fixed; border-radius:50%; background:rgba(255,255,255,0.08); animation:float 20s infinite ease-in-out; pointer-events:none; }
     body::before{ width:500px; height:500px; top:-250px; right:-250px; }
     body::after{ width:400px; height:400px; bottom:-200px; left:-200px; animation-duration:25s; animation-direction:reverse; }
     @keyframes float{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-30px) rotate(10deg); } }
 
+    /* Typography */
     h1,h2,h3,h4,h5,h6{ font-weight:700; line-height:1.2; margin-bottom:var(--spacing-md); color:var(--text-primary); }
     h1{ font-size:clamp(2rem,5vw,3rem); } h2{ font-size:clamp(1.75rem,4vw,2.5rem); } h3{ font-size:clamp(1.5rem,3vw,2rem); }
     p{ margin-bottom:var(--spacing-md); color:var(--text-secondary); }
     a{ color:var(--primary); text-decoration:none; transition:color .3s; } a:hover{ color:var(--primary-dark); }
+    .highlight { color: var(--primary-dark); }
 
+    /* Layout */
     .container{ max-width:1200px; margin:0 auto; padding:0 var(--spacing-md); position:relative; z-index:1; }
     .section{ padding:var(--spacing-2xl) 0; }
 
+    /* Hero */
     .hero{ background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); border-radius:var(--radius-xl); padding:var(--spacing-2xl) var(--spacing-xl); margin:var(--spacing-xl) 0; box-shadow:var(--shadow-xl); text-align:center; animation:slideDown .6s ease-out; }
+    body.dark-mode .hero { background: rgba(45,55,72,0.98); }
     @keyframes slideDown{ from{opacity:0; transform:translateY(-50px);} to{opacity:1; transform:translateY(0);} }
     .hero-icon{ width:100px; height:100px; margin:0 auto var(--spacing-lg); background:linear-gradient(135deg,var(--primary),var(--bg-gradient-end)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; box-shadow:0 10px 30px rgba(102,126,234,0.5); animation:pulse 3s infinite; }
     @keyframes pulse{ 0%,100%{ transform:scale(1); box-shadow:0 10px 30px rgba(102,126,234,0.5); } 50%{ transform:scale(1.08); box-shadow:0 15px 40px rgba(102,126,234,0.7); } }
     .hero-subtitle{ font-size:1.125rem; color:var(--text-muted); max-width:700px; margin:0 auto var(--spacing-lg); line-height:1.7; }
 
+    /* Card */
     .card{ background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); border-radius:var(--radius-xl); padding:var(--spacing-xl); margin-bottom:var(--spacing-lg); box-shadow:var(--shadow-lg); transition:all .3s ease; animation:slideUp .6s ease-out both; }
+    body.dark-mode .card { background: rgba(45,55,72,0.98); }
     @keyframes slideUp{ from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
     .card-header{ display:flex; align-items:center; gap:var(--spacing-md); margin-bottom:var(--spacing-lg); padding-bottom:var(--spacing-md); border-bottom:3px solid var(--border-color); }
     .card-icon{ width:60px; height:60px; background:linear-gradient(135deg,var(--primary),var(--bg-gradient-end)); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:2rem; flex-shrink:0; box-shadow:var(--shadow-md); }
     .card-title{ font-size:1.5rem; margin:0; }
 
-    .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:var(--Spacing-lg); margin:var(--spacing-lg) 0; }
-    .stat-item{ background:linear-gradient(135deg,var(--bg-light),#edf2f7); padding:var(--spacing-lg); border-radius:var(--radius-lg); text-align:center; border:2px solid var(--border-color); transition:all .3s ease; }
-    .stat-number{ font-size:2.5rem; font-weight:800; color:var(--primary); display:block; margin-bottom:var(--spacing-xs); }
-    .stat-label{ color:var(--text-secondary); font-size:.875rem; font-weight:600; }
-
-    .steps-list{ display:grid; gap:var(--spacing-md); }
-    .step-item{ background:linear-gradient(135deg,var(--bg-light),#edf2f7); padding:var(--spacing-lg); border-radius:var(--radius-lg); border-right:5px solid var(--primary); transition:all .4s cubic-bezier(0.4,0,0.2,1); }
-    .step-number{ background:linear-gradient(135deg,var(--primary),var(--bg-gradient-end)); color:white; min-width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.25rem; flex-shrink:0; box-shadow:var(--shadow-md); }
-    .step-content{ padding-right:60px; color:var(--text-secondary); line-height:1.8; }
-
-    input[type="text"], input[type="email"], input[type="tel"], textarea { width:100%; padding:var(--spacing-md); border:2px solid var(--border-color); border-radius:var(--radius-md); font-family:inherit; font-size:1rem; background:var(--bg-light); transition:all .3s ease; }
-    input:focus, textarea:focus { outline:none; border-color:var(--primary); background:white; box-shadow:0 0 0 3px rgba(102,126,234,0.1); }
-    textarea{ resize:vertical; min-height:150px; }
-
+    /* Buttons */
     .btn{ display:inline-flex; align-items:center; justify-content:center; gap:var(--spacing-sm); padding:var(--spacing-md) var(--spacing-lg); border:none; border-radius:var(--radius-md); font-family:inherit; font-size:1rem; font-weight:600; cursor:pointer; transition:all .3s ease; text-decoration:none; box-shadow:var(--shadow-md); }
     .btn-primary{ background:linear-gradient(135deg,var(--primary),var(--bg-gradient-end)); color:white; }
     .btn-secondary{ background:linear-gradient(135deg,var(--secondary),#38a169); color:white; }
     .btn-accent{ background:linear-gradient(135deg,var(--accent),#dd6b20); color:white; }
     .btn-outline{ background:white; color:var(--primary); border:2px solid var(--primary); }
+    body.dark-mode .btn-outline { background:var(--bg-white); }
     .btn-full{ width:100%; }
+    .btn:hover{ transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
 
-    .complaint-template{ background:white; padding:var(--spacing-lg); border-radius:var(--radius-md); border:2px solid var(--border-color); margin:var(--spacing-lg) 0; font-family:"Cairo", monospace; white-space:pre-wrap; direction:rtl; line-height:1.8; }
-
-    .petition-form{ background:linear-gradient(135deg,var(--bg-light),#edf2f7); padding:var(--spacing-xl); border-radius:var(--radius-lg); margin:var(--spacing-lg) 0; }
-    .petition-count{ text-align:center; padding:var(--spacing-lg); background:white; border-radius:var(--radius-md); margin-bottom:var(--spacing-lg); box-shadow:var(--shadow-sm); }
-    .petition-number{ font-size:3rem; font-weight:800; color:var(--primary); display:block; margin-bottom:var(--spacing-xs); }
-    .petition-label{ color:var(--text-secondary); font-size:1.125rem; }
-
-    .signatures-list{ max-height:300px; overflow-y:auto; background:white; border-radius:var(--radius-md); padding:var(--spacing-md); margin-top:var(--spacing-lg); }
-    .signature-item{ padding:var(--spacing-sm); border-bottom:1px solid var(--border-color); display:flex; align-items:center; gap:var(--spacing-sm); }
-    .signature-name{ font-weight:600; color:var(--text-primary); } .signature-date{ margin-right:auto; font-size:.875rem; color:var(--text-muted); }
-
+    /* Alert */
     .alert{ padding:var(--spacing-md); border-radius:var(--radius-md); margin-bottom:var(--spacing-lg); border-right:4px solid; display:flex; align-items:flex-start; gap:var(--spacing-sm); }
     .alert-info{ background:#ebf8ff; border-color:#3182ce; color:#2c5282; }
+    body.dark-mode .alert-info { background:#1e3a5f; border-color:#63b3ed; color:#90cdf4; }
 
-    .toast{ position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:white; padding:var(--spacing-md) var(--spacing-lg); border-radius:var(--radius-md); box-shadow:0 10px 40px rgba(0,0,0,0.2); z-index:1000; display:flex; align-items:center; gap:var(--spacing-sm); opacity:0; transition:all .3s ease; max-width:90%; }
+    /* Toast */
+    .toast{ position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:white; padding:var(--spacing-md) var(--spacing-lg); border-radius:var(--radius-md); box-shadow:0 10px 40px rgba(0,0,0,0.2); z-index:1000; display:flex; align-items:center; gap:var(--spacing-sm); opacity:0; transition:all .3s ease; max-width:90%; color:var(--text-primary); }
+    body.dark-mode .toast { background:var(--bg-white); }
     .toast.show{ transform:translateX(-50%) translateY(0); opacity:1; }
-    .toast-icon{ font-size:1.5rem; } .toast-message{ color:var(--text-primary); font-weight:600; }
 
+    /* Complaint Template Box */
+    .complaint-template {
+      background: var(--bg-light);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--border-color);
+      margin: var(--spacing-lg) 0;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      direction: rtl; /* Default to RTL, updated by JS */
+      max-height: 300px;
+      overflow-y: auto;
+      text-align: right;
+    }
+    body[dir="ltr"] .complaint-template { direction: ltr; text-align: left; }
+
+    /* Settings Button & Modal */
+    .settings-btn {
+      position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg,var(--primary),var(--bg-gradient-end)); border: none; color: white;
+      font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; z-index: 999;
+    }
+    body[dir="ltr"] .settings-btn { right: auto; left: 30px; }
+    .settings-btn:hover { transform: scale(1.1) rotate(90deg); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+    .settings-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(5px);
+    }
+    .settings-modal.show { display: flex; animation: fadeInModal 0.3s ease; }
+    @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+    .settings-content {
+      background: white; border-radius: var(--radius-lg); padding: var(--spacing-xl);
+      max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideInUp 0.3s ease;
+    }
+    body.dark-mode .settings-content { background: var(--bg-white); }
+    @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .settings-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md); border-bottom: 2px solid var(--border-color);
+    }
+    .settings-header h2 { margin: 0; font-size: 1.5rem; }
+    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-primary); transition: transform 0.2s; }
+    .close-btn:hover { transform: rotate(90deg); }
+    .settings-group { margin-bottom: var(--spacing-lg); }
+    .settings-group label { display: block; margin-bottom: var(--spacing-sm); font-weight: 600; color: var(--text-primary); }
+    .toggle-group { display: flex; gap: var(--spacing-md); }
+    .toggle-btn {
+      flex: 1; padding: var(--spacing-md); border: 2px solid var(--border-color); border-radius: var(--radius-md);
+      background: white; color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+    }
+    body.dark-mode .toggle-btn { background: var(--bg-light); color: var(--text-primary); }
+    .toggle-btn.active { background: linear-gradient(135deg,var(--primary),var(--bg-gradient-end)); color: white; border-color: var(--primary); }
+
+    /* Footer */
     .footer{ text-align:center; padding:var(--spacing-2xl) var(--spacing-md); color:white; margin-top:var(--spacing-2xl); }
-    .footer a{ color:white; opacity:.9; } .footer a:hover{ opacity:1; }
 
-    @media print { body{ background:white } body::before, body::after { display:none } .no-print{ display:none !important } .hero, .card { box-shadow:none; border:1px solid #ddd } .complaint-template{ page-break-inside:avoid } }
-    @media (max-width:768px) { .hero{ padding:var(--spacing-lg) var(--spacing-md) } .hero-icon{ width:80px; height:80px; font-size:2.5rem } .card{ padding:var(--spacing-lg) var(--spacing-md) } .btn{ width:100% } }
-    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border-width:0 }
-    :focus-visible{ outline:2px solid var(--primary); outline-offset:2px }
-    .text-center{ text-align:center } .mb-0{ margin-bottom:0 } .mb-1{ margin-bottom:var(--spacing-xs) } .mb-2{ margin-bottom:var(--spacing-sm) } .mb-3{ margin-bottom:var(--spacing-md) } .mb-4{ margin-bottom:var(--spacing-lg) }
- 
-
-
-/* Smooth staggered fade-in for sections */
-.section {
-  opacity: 0;
-  transform: translateY(60px);
-  animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-.section:nth-of-type(2) { animation-delay: 0.15s; }
-.section:nth-of-type(3) { animation-delay: 0.3s; }
-.section:nth-of-type(4) { animation-delay: 0.45s; }
-.section:nth-of-type(5) { animation-delay: 0.6s; }
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(60px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Hero with animated gradient shimmer */
-.hero {
-  background: linear-gradient(120deg, 
-    rgba(255,255,255,0.95) 0%,
-    rgba(240,245,255,0.98) 25%,
-    rgba(255,255,255,0.95) 50%,
-    rgba(245,240,255,0.98) 75%,
-    rgba(255,255,255,0.95) 100%
-  );
-  background-size: 300% 300%;
-  animation: heroShine 8s ease infinite;
-}
-@keyframes heroShine {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* Enhanced card hover with tilt effect */
-.card {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.card:hover {
-  transform: translateY(-10px) scale(1.02) rotateX(2deg);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-/* Button animations */
-.btn {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.3);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-.btn:hover::before {
-  width: 300px;
-  height: 300px;
-}
-.btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-}
-.btn:active {
-  transform: translateY(-1px) scale(0.98);
-}
-
-/* Floating and rotating icons */
-.card-icon, .hero-icon {
-  animation: floatRotate 6s ease-in-out infinite;
-}
-@keyframes floatRotate {
-  0%, 100% { 
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-12px) rotate(5deg);
-  }
-  75% {
-    transform: translateY(-8px) rotate(-5deg);
-  }
-}
-
-/* Stats grid items pop in with bounce */
-.stat-item {
-  animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  opacity: 0;
-}
-.stat-item:nth-child(1) { animation-delay: 0.1s; }
-.stat-item:nth-child(2) { animation-delay: 0.2s; }
-.stat-item:nth-child(3) { animation-delay: 0.3s; }
-.stat-item:nth-child(4) { animation-delay: 0.4s; }
-
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: scale(0.3) rotate(-10deg);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-}
-
-.stat-item:hover {
-  animation: wiggle 0.5s ease;
-}
-@keyframes wiggle {
-  0%, 100% { transform: translateY(-3px) rotate(0deg); }
-  25% { transform: translateY(-5px) rotate(2deg); }
-  75% { transform: translateY(-5px) rotate(-2deg); }
-}
-
-/* Step items slide in from the side */
-.step-item {
-  animation: slideInRight 0.6s ease forwards;
-  opacity: 0;
-}
-.step-item:nth-child(1) { animation-delay: 0.2s; }
-.step-item:nth-child(2) { animation-delay: 0.4s; }
-.step-item:nth-child(3) { animation-delay: 0.6s; }
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.step-item:hover {
-  transform: translateX(-5px);
-  border-right-width: 8px;
-  box-shadow: 0 5px 20px rgba(102,126,234,0.2);
-}
-
-/* Glowing pulse effect for step numbers */
-.step-number {
-  animation: glow 2s ease-in-out infinite;
-}
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(102,126,234,0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(102,126,234,0.8), 0 0 30px rgba(102,126,234,0.6);
-  }
-}
-
-/* Links with smooth glow */
-a {
-  transition: all 0.3s ease;
-}
-a:hover {
-  text-shadow: 0 0 12px rgba(102,126,234,0.8);
-  transform: scale(1.05);
-}
-
-/* Toast slides in with bounce */
-.toast.show {
-  animation: toastBounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-@keyframes toastBounceIn {
-  0% {
-    transform: translateX(-50%) translateY(-100px) scale(0.8);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(-50%) translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-
-/* Alert boxes fade in */
-.alert {
-  animation: alertSlideIn 0.5s ease forwards;
-  opacity: 0;
-}
-@keyframes alertSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Page entrance animation */
-body {
-  animation: fadeInBody 0.8s ease-out;
-}
-@keyframes fadeInBody {
-  from { 
-    opacity: 0;
-    filter: blur(10px);
-  }
-  to { 
-    opacity: 1;
-    filter: blur(0);
-  }
-}
-
-/* Complaint template has typing cursor effect on focus */
-.complaint-template:focus {
-  animation: cursorBlink 1s step-end infinite;
-  border-color: var(--primary);
-}
-
-/* Signature list items fade in */
-.signature-item {
-  animation: signatureFadeIn 0.4s ease forwards;
-  opacity: 0;
-}
-@keyframes signatureFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Input focus animation */
-input:focus, textarea:focus {
-  animation: inputGlow 0.3s ease forwards;
-}
-@keyframes inputGlow {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.01);
-  }
-}
-
+    /* Media Queries */
+    @media (max-width:768px) { 
+      .hero{ padding:var(--spacing-lg) var(--spacing-md) }
+      .card{ padding:var(--spacing-lg) var(--spacing-md) }
+      .btn{ width:100% }
+      .settings-btn {
+        bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 1.25rem;
+      }
+      body[dir="ltr"] .settings-btn { left: 20px; }
+      .card-header { flex-direction: column; text-align: center; }
+      .card-icon { margin-bottom: var(--spacing-sm); }
+    }
   </style>
 </head>
 <body>
-  <!-- Toast notification (hidden by default) -->
-  <div id="toast" class="toast" role="alert" aria-live="polite" aria-atomic="true">
-    <span class="toast-icon" id="toastIcon">✓</span>
-    <span class="toast-message" id="toastMessage"></span>
+  <!-- Settings Button -->
+  <button class="settings-btn" onclick="toggleSettingsModal()" title="الإعدادات">⚙️</button>
+
+  <!-- Settings Modal -->
+  <div class="settings-modal" id="settingsModal" onclick="if(event.target.id === 'settingsModal') toggleSettingsModal()">
+    <div class="settings-content">
+      <div class="settings-header">
+        <h2 id="settingsTitle">الإعدادات</h2>
+        <button class="close-btn" onclick="toggleSettingsModal()">✕</button>
+      </div>
+
+      <!-- Language Setting -->
+      <div class="settings-group">
+        <label id="languageLabel">اللغة</label>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="arBtn" onclick="setLanguage('ar')">العربية</button>
+          <button class="toggle-btn" id="enBtn" onclick="setLanguage('en')">English</button>
+        </div>
+      </div>
+
+      <!-- Theme Setting -->
+      <div class="settings-group">
+        <label id="themeLabel">المظهر</label>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="lightBtn" onclick="setTheme('light')">☀️ فاتح</button>
+          <button class="toggle-btn" id="darkBtn" onclick="setTheme('dark')">🌙 داكن</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast" role="alert">
+    <span id="toastMessage"></span>
   </div>
 
   <div class="container">
     <!-- HERO -->
     <header class="hero" role="banner">
       <div class="hero-icon" aria-hidden="true">🚀</div>
-      <h1>لا للـ <span class="highlight">4G</span> في مصر</h1>
-      <p class="hero-subtitle">
+      <h1 id="heroTitle">لا للـ <span class="highlight">4G</span> في مصر</h1>
+      <p class="hero-subtitle" id="heroSubtitle">
         حملة شعبية سلمية للمطالبة بحق المصريين في بنية تحتية حديثة للاتصالات.
         نريد ترقية الشبكات من 4G إلى 5G لمواكبة التطور العالمي وتحسين جودة الخدمة.
       </p>
       <div class="alert alert-info" role="status">
         <span aria-hidden="true">🔒</span>
         <div>
-          <strong>خصوصيتك مهمة:</strong>
-          هذا الموقع لا يستخدم أي تتبع أو تحليلات. جميع البيانات تبقى على جهازك فقط ولا تُرسل لأي جهة.
+          <strong id="privacyTitle">خصوصيتك مهمة:</strong>
+          <span id="privacyText">هذا الموقع لا يستخدم أي تتبع أو تحليلات. جميع البيانات تبقى على جهازك فقط ولا تُرسل لأي جهة.</span>
         </div>
       </div>
     </header>
 
-   <!-- WHY 5G -->
-<section class="section" id="why-5g">
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon" aria-hidden="true">📊</div>
-      <h2 class="card-title">لماذا نحتاج 5G؟</h2>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-item" style="background: linear-gradient(135deg, #007bff, #00c6ff);">
-        <span class="stat-number">10×</span>
-        <span class="stat-label">أسرع من 4G</span>
-      </div>
-      <div class="stat-item" style="background: linear-gradient(135deg, #28a745, #5ce65c);">
-        <span class="stat-number">1ms</span>
-        <span class="stat-label">زمن استجابة منخفض</span>
-      </div>
-      <div class="stat-item" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
-        <span class="stat-number">100×</span>
-        <span class="stat-label">أجهزة أكثر متصلة</span>
-      </div>
-      <div class="stat-item" style="background: linear-gradient(135deg, #dc3545, #ff4b5c);">
-        <span class="stat-number">99.9%</span>
-        <span class="stat-label">موثوقية الشبكة</span>
-      </div>
-    </div>
-
-    <div class="steps-list mt-4">
-      <div class="step-item">
-        <div class="step-header">
-          <div class="step-number">1</div>
-          <h3 class="step-title">سرعة فائقة للإنترنت</h3>
+    <!-- WHY 5G -->
+    <section class="section" id="why-5g">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" aria-hidden="true">📊</div>
+          <h2 class="card-title" id="why5gTitle">لماذا نحتاج 5G؟</h2>
         </div>
-        <div class="step-content">
-          تصل سرعة 5G إلى 10 أضعاف سرعة 4G، مما يعني تنزيل الملفات الكبيرة في ثوانٍ، ومشاهدة الفيديو بدقة 4K و 8K بدون تقطيع.
+
+        <div class="stats-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:var(--spacing-lg); margin:var(--spacing-lg) 0;">
+          <div class="stat-item" style="background: linear-gradient(135deg, #007bff, #00c6ff); padding:var(--spacing-lg); border-radius:var(--radius-lg); text-align:center; color:white;">
+            <span class="stat-number" style="font-size:2.5rem; font-weight:800; display:block; margin-bottom:var(--spacing-xs);">10×</span>
+            <span class="stat-label" id="stat1">أسرع من 4G</span>
+          </div>
+          <div class="stat-item" style="background: linear-gradient(135deg, #28a745, #5ce65c); padding:var(--spacing-lg); border-radius:var(--radius-lg); text-align:center; color:white;">
+            <span class="stat-number" style="font-size:2.5rem; font-weight:800; display:block; margin-bottom:var(--spacing-xs);">1ms</span>
+            <span class="stat-label" id="stat2">زمن استجابة منخفض</span>
+          </div>
+          <div class="stat-item" style="background: linear-gradient(135deg, #ffc107, #ff9800); padding:var(--spacing-lg); border-radius:var(--radius-lg); text-align:center; color:white;">
+            <span class="stat-number" style="font-size:2.5rem; font-weight:800; display:block; margin-bottom:var(--spacing-xs);">100×</span>
+            <span class="stat-label" id="stat3">أجهزة أكثر متصلة</span>
+          </div>
+          <div class="stat-item" style="background: linear-gradient(135deg, #dc3545, #ff4b5c); padding:var(--spacing-lg); border-radius:var(--radius-lg); text-align:center; color:white;">
+            <span class="stat-number" style="font-size:2.5rem; font-weight:800; display:block; margin-bottom:var(--spacing-xs);">99.9%</span>
+            <span class="stat-label" id="stat4">موثوقية الشبكة</span>
+          </div>
         </div>
       </div>
-
-      <div class="step-item">
-        <div class="step-header">
-          <div class="step-number">2</div>
-          <h3 class="step-title">دعم التحول الرقمي</h3>
-        </div>
-        <div class="step-content">
-          5G ضرورية للتعليم عن بُعد، العمل من المنزل، الرعاية الصحية الرقمية، والمدن الذكية. بدونها نتخلف عن العالم.
-        </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-header">
-          <div class="step-number">3</div>
-          <h3 class="step-title">تنمية الاقتصاد الرقمي</h3>
-        </div>
-        <div class="step-content">
-          الشركات والمطورون يحتاجون 5G لتطوير تطبيقات متقدمة، الذكاء الاصطناعي، إنترنت الأشياء، والابتكار المحلي. الاستثمار في 5G يعني فرص عمل واستثمار أقوى.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<style>
-  #why-5g {
-    margin: 50px auto;
-    max-width: 900px;
-  }
-
-  #why-5g .card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-
-  #why-5g .card-header {
-    background: linear-gradient(135deg, #6f42c1, #007bff);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    padding: 20px;
-  }
-
-  #why-5g .card-icon {
-    font-size: 28px;
-    margin-left: 10px;
-  }
-
-  #why-5g .card-title {
-    margin: 0;
-    font-size: 22px;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-    padding: 20px;
-  }
-
-  .stat-item {
-    border-radius: 12px;
-    padding: 20px;
-    color: #fff;
-    text-align: center;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .stat-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-  }
-
-  .stat-number {
-    font-size: 28px;
-    font-weight: bold;
-    display: block;
-  }
-
-  .stat-label {
-    font-size: 16px;
-  }
-
-  .steps-list {
-    padding: 20px;
-  }
-
-  .step-item {
-    background: #f8f9fa;
-    border-left: 5px solid #007bff;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    transition: 0.3s ease;
-  }
-
-  .step-item:hover {
-    background: #e9f0ff;
-  }
-
-  .step-header {
-    display: flex;
-    align-items: center;
-  }
-
-  .step-number {
-    background: #007bff;
-    color: #fff;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 32px;
-    font-weight: bold;
-    margin-left: 10px;
-  }
-
-  .step-title {
-    font-size: 18px;
-    margin: 0;
-  }
-
-  .step-content {
-    margin-top: 10px;
-    font-size: 15px;
-    color: #333;
-  }
-</style>
-
+    </section>
 
     <!-- COMPLAINT TEMPLATE -->
     <section class="section" id="complaint">
-      <div class="card" aria-labelledby="complaintTitle">
+      <div class="card">
         <div class="card-header">
-          <div class="card-icon" aria-hidden="true">✉️</div>
-          <h2 id="complaintTitle" class="card-title">قوالب الشكوى الجاهزة</h2>
+          <div class="card-icon">✉️</div>
+          <h2 class="card-title" id="complaintTitle">قوالب الشكوى الجاهزة</h2>
         </div>
-
-        <div class="complaint-template" id="complaintText" contenteditable="false" role="region" aria-label="نموذج الشكوى">
-الموضوع: شكوى بخصوص خدمة الإنترنت/الموبايل في [المنطقة] — طلب تدخل NTRA
+        <p id="complaintDesc">استخدم أحد الخيارات التالية للتواصل مع جهاز تنظيم الاتصالات:</p>
+        <div class="complaint-template" id="complaintText">الموضوع: شكوى بخصوص خدمة الإنترنت/الموبايل في [المنطقة]
 
 السلام عليكم،
 
-أنا أرفع شكوى عن ضعف جودة خدمة الإنترنت في المنطقة التالية: [الحي/المدينة]. شركة الاتصالات: [اسم الشركة]. التواريخ التي تأثرت فيها الخدمة: [تواريخ]. نتائج قياس السرعة: تحميل [Mbps] - رفع [Mbps]. رقم الشكوى لدى الشركة: [رقم].
+أنا أرفع شكوى عن ضعف جودة خدمة الإنترنت في المنطقة التالية: [الحي/المدينة].
+شركة الاتصالات: [اسم الشركة]
+التواريخ التي تأثرت فيها الخدمة: [تواريخ]
+نتائج قياس السرعة: تحميل [Mbps] - رفع [Mbps]
 
-حاولت حل المشكلة مع الشركة ولم أجد تجاوبًا كافياً. أرجو من جهاز تنظيم الاتصالات (NTRA) التحقيق واتخاذ الإجراءات اللازمة لضمان جودة الخدمة وحقوق المستهلكين.
+حاولت حل المشكلة مع الشركة ولم أجد تجاوبًا كافياً. أرجو من جهاز تنظيم الاتصالات التحقيق واتخاذ الإجراءات اللازمة.
 
 شكراً،
 [الاسم]
 [التليفون]
-[البريد الإلكتروني]
+[البريد الإلكتروني]</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+          <button class="btn btn-primary" onclick="copyComplaint()" id="copyBtn">📋 انسخ النص</button>
+          <button class="btn btn-secondary" onclick="sendEmail()" id="emailBtn">📧 أرسل إيميل</button>
+          <button class="btn btn-accent" onclick="sendWhatsApp()" id="whatsappBtn">💬 أرسل واتس</button>
         </div>
-
-        <div class="btn-group" role="group" aria-label="إجراءات الشكوى">
-          <button class="btn btn-primary" onclick="copyComplaint()">انسخ النص</button>
-          <button class="btn btn-outline" onclick="openMail()">افتح الإيميل</button>
-          <button class="btn btn-secondary" onclick="openWhatsApp()">أرسل على واتساب</button>
-          <button class="btn btn-accent" onclick="printComplaint()">طباعة</button>
-        </div>
-
       </div>
     </section>
-<!-- PETITION (GOOGLE FORM LINK) -->
-<section class="section" id="petitionSection">
-  <div class="card" style="text-align:center;">
-    <div class="card-header">
-      <div class="card-icon" aria-hidden="true">📝</div>
-      <h2 id="petitionTitle" class="card-title">شارك في العريضة</h2>
-    </div>
 
-    <p class="small">ساعدنا نطالب بتحسين الإنترنت في مصر — اضغط الزر واملأ النموذج على Google Forms.</p>
-
-    <button class="btn btn-primary"
-      onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSduKpzkDvEEEdcyaoKPkboCq8UUKt_W3gOdXSzj8TuPe3OtIQ/viewform?usp=header', '_blank')">
-      الانتقال إلى العريضة على Google Forms
-    </button>
-  </div>
-</section>
-
-    <!-- ==== NEW: CALL NTRA SECTION (CTA) ==== -->
-    <section class="section" id="call-ntra">
-      <div class="card" aria-labelledby="callTitle">
+    <!-- CONTACT NTRA SECTION -->
+    <section class="section" id="contact-ntra">
+      <div class="card">
         <div class="card-header">
-          <div class="card-icon" aria-hidden="true">📞</div>
-          <h2 id="callTitle" class="card-title">اتصل الآن بـ NTRA</h2>
+          <div class="card-icon">📞</div>
+          <h2 class="card-title" id="contactTitle">تواصل مع NTRA مباشرة</h2>
         </div>
-
-        <p class="mb-2">لو عايز تتابع شكوتك بسرعة أو تحكي لمركز الشكاوى مباشرة، تقدر تتصل بالخط الساخن أو بالخط الرئيسي. لو إنت على موبايل هيتفتح تطبيق الاتصال تلقائيًا.</p>
-
-        <div class="btn-group" role="group" aria-label="خيارات الاتصال">
-          <!-- Short code (mobile) -->
-          <button class="btn btn-primary btn-full" onclick="callNTRA('155','الرقم المختصر 155')">📱 اتصل على 155 (من الموبايل)</button>
-
-          <!-- Main landline -->
-          <button class="btn btn-secondary btn-full" onclick="callNTRA('+20235344000','الخط الرئيسي +20 2 3534 4000')">📞 اتصل بالخط الرئيسي +20 2 3534 4000</button>
-
-          <!-- WhatsApp/contact -->
-          <button class="btn btn-accent btn-full" onclick="openWhatsAppToNTRA()">💬 تواصل على واتساب</button>
+        <p id="contactDesc">اتصل أو أرسل رسالة على واتساب مباشرة لمركز الشكاوى:</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+          <button class="btn btn-primary btn-full" onclick="window.location.href='tel:+201202155155'" id="callBtn">📞 اتصل الآن</button>
+          <button class="btn btn-secondary btn-full" onclick="window.open('https://wa.me/201202155155?text=' + encodeURIComponent(document.getElementById('complaintText').innerText), '_blank')" id="messageBtn">💬 أرسل رسالة واتس</button>
+          <button class="btn btn-accent btn-full" onclick="window.open('https://www.tra.gov.eg/ar/', '_blank')" id="websiteBtn">🌐 زيارة موقع NTRA</button>
         </div>
-
-        <div style="margin-top:16px; color:var(--text-muted);">
-          <strong>معلومة:</strong> مركز الشكاوى يعمل من 8 صباحاً لـ10 مساءً عادةً. لو مافيش استجابة، احتفظ برقم الشكوى وكرر الاتصال.
+        <div style="background: var(--bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md); color: var(--text-secondary);">
+          <strong id="ntraInfoTitle">معلومات التواصل:</strong>
+          <p id="ntraPhone" style="margin: 8px 0;">📞 الرقم: +20 120 215 5155</p>
+          <p id="ntraWhatsapp" style="margin: 8px 0;">💬 واتساب: +20 120 215 5155</p>
+          <p id="ntraEmail" style="margin: 8px 0;">📧 البريد: complaints@ntra.gov.eg</p>
+          <p id="ntraHours" style="margin: 8px 0; font-size: 0.9rem;">⏰ ساعات العمل: من 8 صباحاً لـ 10 مساءً</p>
         </div>
+      </div>
+    </section>
+
+    <!-- PETITION (GOOGLE FORM LINK) -->
+    <section class="section" id="petitionSection">
+      <div class="card" style="text-align:center;">
+        <div class="card-header">
+          <div class="card-icon" aria-hidden="true">📝</div>
+          <h2 id="petitionTitle" class="card-title">شارك في العريضة</h2>
+        </div>
+        <p id="petitionDesc" class="small">ساعدنا نطالب بتحسين الإنترنت في مصر — اضغط الزر واملأ النموذج على Google Forms.</p>
+        <button class="btn btn-primary" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSduKpzkDvEEEdcyaoKPkboCq8UUKt_W3gOdXSzj8TuPe3OtIQ/viewform?usp=header', '_blank')" id="formBtn">الانتقال إلى العريضة على Google Forms</button>
       </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="footer no-print" role="contentinfo">
-      <p>شارك الحملة بسلمية — حافظ على خصوصيتك. الموقع لا يرسل بيانات خارج جهازك.</p>
-      <div class="footer-links">
-        <a class="footer-link" href="#complaint">قوالب الشكوى</a>
-        <a class="footer-link" href="#petitionSection">العريضة المحلية</a>
-        <a class="footer-link" href="#call-ntra">اتصل الآن</a>
-      </div>
+    <footer class="footer" role="contentinfo">
+      <p id="footerText">شارك الحملة بسلمية — حافظ على خصوصيتك. الموقع لا يرسل بيانات خارج جهازك.</p>
     </footer>
   </div>
 
   <script>
-    // =========================
-    // Toast helper
-    // =========================
-    const toastEl = document.getElementById('toast');
-    const toastMsg = document.getElementById('toastMessage');
-    const toastIcon = document.getElementById('toastIcon');
-    let toastTimer = null;
-    function showToast(message, icon = '✓', ms = 2500){
-      clearTimeout(toastTimer);
-      toastMsg.textContent = message;
-      toastIcon.textContent = icon;
-      toastEl.classList.add('show');
-      toastTimer = setTimeout(()=> toastEl.classList.remove('show'), ms);
-    }
-
-    // =========================
-    // Complaint actions
-    // =========================
-    function copyComplaint(){
-      const txt = document.getElementById('complaintText').innerText.trim();
-      if(!txt){ showToast('مفيش نص للنسخ', '⚠'); return; }
-      navigator.clipboard?.writeText(txt).then(()=> showToast('النص اتنسخ — عدل قبل الإرسال')) .catch(()=> { prompt('انسخ النص يدوياً:', txt); });
-    }
-    function openMail(){
-      const subject = encodeURIComponent('شكوى بخصوص خدمة الإنترنت');
-      const body = encodeURIComponent(document.getElementById('complaintText').innerText.trim());
-      window.location.href = 'mailto:complaints@tra.gov.eg?subject=' + subject + '&body=' + body;
-    }
-    function openWhatsApp(){
-      const waNumber = '201202155155'; // example; adjust if needed
-      const text = encodeURIComponent(document.getElementById('complaintText').innerText.trim());
-      window.open('https://wa.me/' + waNumber + '?text=' + text, '_blank');
-    }
-    function printComplaint(){
-      window.print();
-    }
-
-    // =========================
-    // Petition (localStorage)
-    // =========================
-    const PET_KEY = 'eg_no_more_4g_petition_v1';
-    function loadSignatures(){ try{ return JSON.parse(localStorage.getItem(PET_KEY) || '[]'); } catch(e){ return []; } }
-    function saveSignatures(list){ localStorage.setItem(PET_KEY, JSON.stringify(list)); }
-    function renderSignatures(){
-      const list = loadSignatures();
-      const container = document.getElementById('signaturesList');
-      const number = document.getElementById('petitionNumber');
-      container.innerHTML = '';
-      number.textContent = list.length;
-      if(list.length === 0){
-        container.innerHTML = '<div id="noSign" class="small">مافيش توقيعات لسه.</div>';
-        return;
+    const translations = {
+      ar: {
+        settingsTitle: 'الإعدادات',
+        languageLabel: 'اللغة',
+        themeLabel: 'المظهر',
+        lightBtn: '☀️ فاتح',
+        darkBtn: '🌙 داكن',
+        arBtn: 'العربية',
+        enBtn: 'English',
+        heroTitle: 'لا للـ 4G في مصر',
+        heroSubtitle: 'حملة شعبية سلمية للمطالبة بحق المصريين في بنية تحتية حديثة للاتصالات. نريد ترقية الشبكات من 4G إلى 5G لمواكبة التطور العالمي وتحسين جودة الخدمة.',
+        privacyTitle: 'خصوصيتك مهمة:',
+        privacyText: 'هذا الموقع لا يستخدم أي تتبع أو تحليلات. جميع البيانات تبقى على جهازك فقط ولا تُرسل لأي جهة.',
+        why5gTitle: 'لماذا نحتاج 5G؟',
+        stat1: 'أسرع من 4G',
+        stat2: 'زمن استجابة منخفض',
+        stat3: 'أجهزة أكثر متصلة',
+        stat4: 'موثوقية الشبكة',
+        complaintTitle: 'قوالب الشكوى الجاهزة',
+        complaintDesc: 'استخدم أحد الخيارات التالية للتواصل مع جهاز تنظيم الاتصالات:',
+        copyBtn: '📋 انسخ النص',
+        emailBtn: '📧 أرسل إيميل',
+        whatsappBtn: '💬 أرسل واتس',
+        complaintText: 'الموضوع: شكوى بخصوص خدمة الإنترنت/الموبايل في [المنطقة]\n\nالسلام عليكم،\n\nأنا أرفع شكوى عن ضعف جودة خدمة الإنترنت في المنطقة التالية: [الحي/المدينة].\nشركة الاتصالات: [اسم الشركة]\nالتواريخ التي تأثرت فيها الخدمة: [تواريخ]\nنتائج قياس السرعة: تحميل [Mbps] - رفع [Mbps]\n\nحاولت حل المشكلة مع الشركة ولم أجد تجاوبًا كافياً. أرجو من جهاز تنظيم الاتصالات التحقيق واتخاذ الإجراءات اللازمة.\n\nشكراً،\n[الاسم]\n[التليفون]\n[البريد الإلكتروني]',
+        contactTitle: 'تواصل مع NTRA مباشرة',
+        contactDesc: 'اتصل أو أرسل رسالة على واتساب مباشرة لمركز الشكاوى:',
+        callBtn: '📞 اتصل الآن',
+        messageBtn: '💬 أرسل رسالة واتس',
+        websiteBtn: '🌐 زيارة موقع NTRA',
+        ntraInfoTitle: 'معلومات التواصل:',
+        ntraPhone: '📞 الرقم: +20 120 215 5155',
+        ntraWhatsapp: '💬 واتساب: +20 120 215 5155',
+        ntraEmail: '📧 البريد: complaints@ntra.gov.eg',
+        ntraHours: '⏰ ساعات العمل: من 8 صباحاً لـ 10 مساءً',
+        petitionTitle: 'شارك في العريضة',
+        petitionDesc: 'ساعدنا نطالب بتحسين الإنترنت في مصر — اضغط الزر واملأ النموذج على Google Forms.',
+        formBtn: 'الانتقال إلى العريضة على Google Forms',
+        footerText: 'شارك الحملة بسلمية — حافظ على خصوصيتك. الموقع لا يرسل بيانات خارج جهازك.',
+        copySuccess: 'تم نسخ نص الشكوى بنجاح!'
+      },
+      en: {
+        settingsTitle: 'Settings',
+        languageLabel: 'Language',
+        themeLabel: 'Theme',
+        lightBtn: '☀️ Light',
+        darkBtn: '🌙 Dark',
+        arBtn: 'العربية',
+        enBtn: 'English',
+        heroTitle: 'No to 4G in Egypt',
+        heroSubtitle: 'A peaceful popular campaign demanding the right of Egyptians to modern communications infrastructure. We want network upgrade from 4G to 5G to keep pace with global development and improve service quality.',
+        privacyTitle: 'Your privacy is important:',
+        privacyText: 'This site does not use any tracking or analytics. All data remains on your device only and is not sent to any party.',
+        why5gTitle: 'Why do we need 5G?',
+        stat1: 'Faster than 4G',
+        stat2: 'Low Latency',
+        stat3: 'More connected devices',
+        stat4: 'Network Reliability',
+        complaintTitle: 'Ready-Made Complaint Templates',
+        complaintDesc: 'Use one of the following options to contact the National Telecommunication Regulatory Authority (NTRA):',
+        copyBtn: '📋 Copy Text',
+        emailBtn: '📧 Send Email',
+        whatsappBtn: '💬 Send WhatsApp',
+        complaintText: 'Subject: Complaint regarding Internet/Mobile service in [Area]\n\nTo Whom It May Concern,\n\nI am filing a complaint about the poor quality of internet service in the following area: [Neighborhood/City].\nTelecom Company: [Company Name]\nDates affected: [Dates]\nSpeed Test Results: Download [Mbps] - Upload [Mbps]\n\nI tried resolving the issue with the company but did not receive an adequate response. I urge the NTRA to investigate and take the necessary actions.\n\nThank you,\n[Name]\n[Phone]\n[Email]',
+        contactTitle: 'Contact NTRA Directly',
+        contactDesc: 'Call or send a WhatsApp message directly to the Complaints Center:',
+        callBtn: '📞 Call Now',
+        messageBtn: '💬 Send WhatsApp Message',
+        websiteBtn: '🌐 Visit NTRA Website',
+        ntraInfoTitle: 'Contact Information:',
+        ntraPhone: '📞 Phone: +20 120 215 5155',
+        ntraWhatsapp: '💬 WhatsApp: +20 120 215 5155',
+        ntraEmail: '📧 Email: complaints@ntra.gov.eg',
+        ntraHours: '⏰ Working Hours: 8 AM to 10 PM',
+        petitionTitle: 'Join the Petition',
+        petitionDesc: 'Help us demand better internet in Egypt — click the button and fill out the form on Google Forms.',
+        formBtn: 'Go to Google Forms Petition',
+        footerText: 'Share the campaign peacefully — protect your privacy. The site does not send data off your device.',
+        copySuccess: 'Complaint text copied successfully!'
       }
-      list.slice().reverse().forEach(s => {
-        const item = document.createElement('div');
-        item.className = 'signature-item';
-        item.innerHTML = `<div class="signature-name">${escapeHtml(s.name)}</div><div class="signature-date">${escapeHtml(s.area || '')} • ${escapeHtml(s.phone || '')}</div>`;
-        container.appendChild(item);
-      });
-    }
-    function addSignature(){
-      const name = document.getElementById('sigName').value.trim();
-      const phone = document.getElementById('sigPhone').value.trim();
-      const area = document.getElementById('sigArea').value.trim();
-      if(!name){ alert('اكتب الاسم الأول!'); return; }
-      const list = loadSignatures();
-      list.push({ name, phone, area, ts: new Date().toISOString() });
-      saveSignatures(list);
-      document.getElementById('sigName').value = '';
-      document.getElementById('sigPhone').value = '';
-      document.getElementById('sigArea').value = '';
-      renderSignatures();
-      showToast('تم إضافة توقيع محليًا');
-    }
-    function clearSignatures(){
-      if(!confirm('هل أنت متأكد أنك عايز تمسح كل التوقيعات من جهازك؟ العملية محلية ولن تُستعاد.')) return;
-      localStorage.removeItem(PET_KEY);
-      renderSignatures();
-      showToast('تم مسح التوقيعات المحلية');
-    }
-    function escapeHtml(str = ''){ return String(str).replace(/[&<>"']/g, (m)=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]) ); }
-    renderSignatures();
+    };
 
-    // =========================
-    // CALL NTRA - main addition
-    // =========================
-    // Attempts to open a tel: link. If not on a phone, shows the number and instructions.
-    function isMobileDevice(){
-      return /Mobi|Android|iPhone|iPad|iPod|Windows Phone|webOS/i.test(navigator.userAgent);
+    // --- Utility Functions ---
+
+    /** Shows a temporary toast notification */
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      toastMessage.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
     }
 
-    function callNTRA(number, label){
-      // normalize number for tel: (remove spaces)
-      const tel = 'tel:' + String(number).replace(/\s+/g,'');
-      if(isMobileDevice()){
-        // On mobile, try to open the dialer
-        window.location.href = tel;
-        showToast('جارٍ فتح تطبيق الاتصال...', '📞');
-      } else {
-        // Desktop fallback: show alert with number and copy option
-        const msg = `${label}\n\nاتصل بالرقم باستخدام هاتفك أو تطبيق الاتصال: ${number}`;
-        if (confirm(msg + '\n\nنسخ الرقم إلى الحافظة؟')) {
-          try {
-            navigator.clipboard.writeText(number);
-            showToast('تم نسخ الرقم إلى الحافظة', '📋');
-          } catch(e){
-            prompt('انسخ الرقم يدوياً:', number);
+    /** Toggles the settings modal visibility */
+    function toggleSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      modal.classList.toggle('show');
+    }
+
+    // --- Theme (Dark Mode) Logic ---
+
+    /** Sets the theme preference and updates UI */
+    function setTheme(theme) {
+      const isDark = theme === 'dark';
+      document.body.classList.toggle('dark-mode', isDark);
+      localStorage.setItem('theme', theme);
+
+      document.getElementById('lightBtn').classList.remove('active');
+      document.getElementById('darkBtn').classList.remove('active');
+      document.getElementById(theme + 'Btn').classList.add('active');
+    }
+
+    /** Applies the saved theme on load */
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      setTheme(savedTheme);
+    }
+
+    // --- Language Logic ---
+
+    /** Sets the language preference and updates all text, attributes, and styles */
+    function setLanguage(lang) {
+      const t = translations[lang];
+      if (!t) return;
+
+      // 1. Update HTML attributes
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('language', lang);
+
+      // 2. Apply translations
+      for (const id in t) {
+        const element = document.getElementById(id);
+        if (element) {
+          // Special handling for buttons/text content
+          if (['lightBtn', 'darkBtn', 'arBtn', 'enBtn', 'copyBtn', 'emailBtn', 'whatsappBtn', 'callBtn', 'messageBtn', 'websiteBtn', 'formBtn'].includes(id)) {
+            element.textContent = t[id];
+          } else if (id === 'complaintText') {
+            element.textContent = t[id];
+          } else {
+            element.innerHTML = t[id];
           }
         }
       }
+      
+      // 3. Update active state of language buttons
+      document.getElementById('arBtn').classList.toggle('active', lang === 'ar');
+      document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+      
+      // 4. Update Settings Button tooltip
+      document.querySelector('.settings-btn').title = t.settingsTitle;
     }
 
-    // Dedicated WhatsApp to NTRA — opens WhatsApp chat
-    function openWhatsAppToNTRA(){
-      const waNumber = '201202155155'; // example national contact (update if official)
-      const pre = encodeURIComponent('تحية طيبة، أود تقديم شكوى عن جودة خدمة الإنترنت في منطقتي. التفاصيل: ');
-      window.open('https://wa.me/' + waNumber + '?text=' + pre, '_blank');
+    /** Applies the saved language on load */
+    function loadLanguage() {
+      const savedLang = localStorage.getItem('language') || 'ar'; // Default to Arabic
+      setLanguage(savedLang);
     }
 
-    // Ensure keyboard accessibility for call buttons
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape'){ // hide toast quickly
-        toastEl.classList.remove('show');
+    // --- Complaint Actions ---
+
+    /** Copies the complaint text to the clipboard */
+    function copyComplaint() {
+      const complaintTextElement = document.getElementById('complaintText');
+      const textToCopy = complaintTextElement.textContent;
+      
+      // Use execCommand for broader compatibility in sandboxed environments
+      const textArea = document.createElement('textarea');
+      textArea.value = textToCopy;
+      document.body.appendChild(textArea);
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        const lang = document.documentElement.lang;
+        const msg = successful ? translations[lang].copySuccess : 'فشل النسخ / Copy failed.';
+        showToast(msg);
+      } catch (err) {
+        console.error('Copy failed: ', err);
+        showToast('فشل النسخ. يرجى النسخ يدوياً / Copy failed. Please copy manually.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    /** Opens mail client with pre-filled subject and body */
+    function sendEmail() {
+      const complaintText = document.getElementById('complaintText').textContent;
+      const subjectMatch = complaintText.match(/الموضوع: (.*)/) || complaintText.match(/Subject: (.*)/);
+      const subject = subjectMatch ? subjectMatch[1].trim() : (document.documentElement.lang === 'ar' ? 'شكوى بخصوص جودة خدمة الإنترنت' : 'Complaint Regarding Internet Service Quality');
+      const body = complaintText;
+      const emailLink = `mailto:complaints@ntra.gov.eg?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.open(emailLink, '_blank');
+    }
+    
+    /** Opens WhatsApp with the complaint text (NTRA number is +201202155155) */
+    function sendWhatsApp() {
+        const complaintText = document.getElementById('complaintText').textContent;
+        const whatsappLink = `https://wa.me/201202155155?text=${encodeURIComponent(complaintText)}`;
+        window.open(whatsappLink, '_blank');
+    }
+
+    // --- Initialization ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTheme();
+      loadLanguage();
+      
+      // Re-map the WhatsApp button in the "Contact NTRA" section to use the pre-filled complaint text
+      const ntraWhatsappBtn = document.getElementById('messageBtn');
+      if (ntraWhatsappBtn) {
+          ntraWhatsappBtn.onclick = () => {
+              window.open('https://wa.me/201202155155?text=' + encodeURIComponent(document.getElementById('complaintText').textContent), '_blank');
+          };
       }
     });
-    /* ✨ Extra Animations (no JS needed) ✨ */
-
-/* Fade-in on scroll (basic version using opacity + translateY) */
-.section {
-  opacity: 0;
-  transform: translateY(40px);
-  animation: fadeInUp 1s ease forwards;
-}
-.section:nth-of-type(2) { animation-delay: 0.2s; }
-.section:nth-of-type(3) { animation-delay: 0.4s; }
-.section:nth-of-type(4) { animation-delay: 0.6s; }
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Hero shimmer gradient */
-.hero {
-  background: linear-gradient(120deg, rgba(255,255,255,0.95), rgba(255,255,255,0.98));
-  background-size: 200% 200%;
-  animation: heroShine 6s ease infinite;
-}
-@keyframes heroShine {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Bounce hover effect for buttons and cards */
-.btn:hover, .card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-/* Floating icons (like 🚀 📞 📊) */
-.card-icon, .hero-icon {
-  animation: floaty 4s ease-in-out infinite;
-}
-@keyframes floaty {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-/* Make links gently glow on hover */
-a:hover {
-  text-shadow: 0 0 8px rgba(102,126,234,0.6);
-  transform: scale(1.05);
-}
-
-/* Nice “pop” when the page loads */
-body {
-  animation: fadeInBody 0.6s ease-out;
-}
-@keyframes fadeInBody {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-
-    // Accessibility: focus outlines for buttons already handled by :focus-visible
   </script>
 </body>
 </html>
-
